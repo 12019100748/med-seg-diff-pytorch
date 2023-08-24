@@ -321,12 +321,12 @@ class Unet(nn.Module):
         attn_kwargs = dict(
             dim_head = attn_dim_head,
             heads = attn_heads
-        )
+        )#dim_head用于指定注意力机制中每个头部的维度, heads指定注意力机制中头部的数量。
 
         # layers
 
-        num_resolutions = len(in_out)
-        assert len(full_self_attn) == num_resolutions
+        num_resolutions = len(in_out)#元组等于3
+        assert len(full_self_attn) == num_resolutions#长度是否等于元组的长度？
 
         self.conditioners = nn.ModuleList([])
 
@@ -338,9 +338,9 @@ class Unet(nn.Module):
 
         curr_fmap_size = image_size
 
-        for ind, ((dim_in, dim_out), full_attn) in enumerate(zip(in_out, full_self_attn)):
+        for ind, ((dim_in, dim_out), full_attn) in enumerate(zip(in_out, full_self_attn)):#可以输出来查看分别存储的值
             is_last = ind >= (num_resolutions - 1)
-            attn_klass = Attention if full_attn else LinearAttention
+            attn_klass = Attention if full_attn else LinearAttention#Attention与LinearAttention有什么区别
 
             self.conditioners.append(conditioning_klass(curr_fmap_size, dim_in))
 
@@ -371,7 +371,7 @@ class Unet(nn.Module):
 
         self.ups = nn.ModuleList([])
 
-        for ind, ((dim_in, dim_out), full_attn) in enumerate(zip(reversed(in_out), reversed(full_self_attn))):
+        for ind, ((dim_in, dim_out), full_attn) in enumerate(zip(reversed(in_out), reversed(full_self_attn))):#in_out存储了一堆数组
             is_last = ind == (len(in_out) - 1)
             attn_klass = Attention if full_attn else LinearAttention
 
